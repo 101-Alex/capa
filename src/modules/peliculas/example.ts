@@ -36,7 +36,7 @@ async function runCrudExample(): Promise<void> {
     console.log('\nUPDATE:', updated);
 
     // DELETE: descomenta para borrar el registro de prueba.
-    // console.log('\nDELETE:', await peliculasRepository.delete(created.id));
+    console.log('\nDELETE:', await peliculasRepository.delete(created.id));
   } finally {
     await db.close();
   }
