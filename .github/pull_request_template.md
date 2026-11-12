@@ -8,26 +8,28 @@
 
 ## Checklist del colaborador
 
-- [ ] Trabajé únicamente dentro de `src/modules/<mi-modulo>/`.
-- [ ] No modifiqué `ModuleRepository`, la configuración de Turso ni la inicialización de la BD.
-- [ ] Mi repositorio usa el `modulo` y `autor` asignados.
-- [ ] No agregué credenciales, tokens ni archivos `.env` al commit.
-- [ ] Probé las operaciones que utiliza mi módulo.
+- [ ] Trabajé únicamente dentro de `backend/src/modules/<mi-modulo>/`.
+- [ ] No modifiqué `ModuleRepository.ts`.
+- [ ] No modifiqué la configuración ni la inicialización de Turso.
+- [ ] Mi repositorio utiliza el `modulo` y `autor` asignados.
+- [ ] No agregué credenciales, tokens ni archivos `.env`.
+- [ ] Probé las operaciones CRUD correspondientes.
 - [ ] Ejecuté `npm run typecheck` sin errores.
-- [ ] No incluí archivos generados (`node_modules`, `dist`, etc.).
+- [ ] No incluí archivos generados como `node_modules` o `dist`.
 
-## Checklist de revisión del líder
+## Checklist de revisión de la líder
 
 - [ ] La rama corresponde al módulo asignado.
 - [ ] Los cambios están limitados a la carpeta autorizada.
 - [ ] No hay conflictos con `main`.
 - [ ] El código respeta las interfaces y convenciones del proyecto.
-- [ ] Las consultas usan el repositorio compartido y no crean tablas adicionales.
-- [ ] Los datos se guardan mediante JSONB y se leen como objetos.
-- [ ] Se verificaron casos de creación, lectura, actualización y eliminación aplicables.
+- [ ] Se utiliza el repositorio compartido `ModuleRepository`.
+- [ ] No se crearon tablas adicionales.
+- [ ] Los datos se almacenan mediante JSONB y se consultan como objetos.
+- [ ] Se verificaron las operaciones CRUD aplicables.
 - [ ] No hay secretos ni datos sensibles en el código.
-- [ ] Aprobado para merge.
+- [ ] El Pull Request fue revisado y aprobado.
 
-## Evidencia / notas de pruebas
+## Evidencia y notas de pruebas
 
-Describe aquí cómo probaste el módulo y agrega capturas si aplica.
+Describe cómo probaste el módulo y agrega capturas o resultados de las pruebas cuando corresponda.

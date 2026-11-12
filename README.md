@@ -1,86 +1,168 @@
 # CAPA — Proyecto colaborativo modular
 
-CAPA utiliza Node.js, TypeScript y Turso (libSQL). Cada integrante desarrolla su módulo en una carpeta aislada y almacena sus registros en la tabla compartida `records`.
+CAPA es un proyecto colaborativo desarrollado con **React, Vite, Node.js, Express, TypeScript y Turso (libSQL)**. Su arquitectura permite que cada integrante desarrolle un módulo independiente y almacene sus registros en una única tabla compartida llamada `records`.
 
 ## 1. Equipo y asignación
 
-| Integrante | Rama | Carpeta autorizada |
-|---|---|---|
-| PAOLA (Líder) | `peliculas` | `src/modules/peliculas/` |
-| CANEK | `aves` | `src/modules/aves/` |
-| ALY | `comida` | `src/modules/comida/` |
-| AMBAR | `anime` | `src/modules/anime/` |
+| Integrante | Responsabilidad | Rama | Carpeta autorizada |
+|---|---|---|---|
+| PAOLA | Líder — Películas | `peliculas` | `backend/src/modules/peliculas/` |
+| CANEK | Aves | `aves` | `backend/src/modules/aves/` |
+| ALY | Comida | `comida` | `backend/src/modules/comida/` |
+| AMBAR | Anime | `anime` | `backend/src/modules/anime/` |
 
-La rama y el valor `modulo` deben coincidir exactamente. El valor `autor` debe ser el nombre asignado en esta tabla.
+La rama, el valor `modulo` y la carpeta deben coincidir. El valor `autor` debe corresponder al integrante asignado.
 
 ## 2. Requisitos
 
-- Node.js 20 o superior (recomendado).
+- Node.js 20 o superior.
 - npm.
 - Git.
-- Acceso al repositorio GitHub.
-- Credenciales de Turso proporcionadas por PAOLA.
+- Visual Studio Code (recomendado).
+- Acceso al repositorio de GitHub.
+- Credenciales de Turso proporcionadas de forma privada por la líder.
 
-## 3. Instalación
+## 3. Clonar el repositorio
 
-Clona el repositorio y entra en la carpeta:
+Clona el proyecto y entra en su carpeta:
 
 ```bash
-git clone https://github.com/USUARIO-GITHUB/capa.git
+git clone https://github.com/101-Alex/capa.git
 cd capa
+```
+
+Instala las dependencias del backend:
+
+```bash
 npm install
 ```
 
-Cambia a tu rama (sustituye por la asignada):
+Para instalar las dependencias del frontend:
 
 ```bash
-git checkout aves
+cd frontend
+npm install
+cd ..
 ```
 
-Otras ramas: `peliculas`, `comida`, `anime`.
+## 4. Cambiar a la rama asignada
 
-## 4. Variables de entorno
+Cada integrante debe trabajar exclusivamente en su rama.
 
-Copia `.env.example` como `.env` y completa los valores que te entregará PAOLA:
+Primero actualiza la información de las ramas:
+
+```bash
+git fetch origin
+```
+
+Después cambia a la rama que corresponda:
+
+```bash
+git switch aves
+```
+
+Otras ramas disponibles:
+
+- `peliculas`
+- `comida`
+- `anime`
+
+No desarrolles tu módulo directamente en `main`.
+
+## 5. Variables de entorno
+
+La líder proporcionará las credenciales de Turso de forma privada.
+
+Crea un archivo `.env` en la raíz del proyecto, tomando como referencia `.env.example`:
 
 ```env
 TURSO_DATABASE_URL=libsql://tu-base-de-datos.turso.io
 TURSO_AUTH_TOKEN=tu_token_de_turso
 ```
 
-No compartas el token ni lo subas a Git. El archivo `.env` está excluido mediante `.gitignore`.
+No compartas el token ni lo incluyas en Git. El archivo `.env` está excluido mediante `.gitignore`.
 
-## 5. Inicialización de la base de datos (solo líder)
+## 6. Base de datos compartida
 
-PAOLA ejecuta una sola vez, después de configurar sus credenciales:
+La líder inicializa la base de datos una sola vez mediante:
 
 ```bash
 npm run db:init
 ```
 
-Esto crea `records` y los índices `idx_records_modulo` e `idx_records_autor`. Los demás integrantes no deben ejecutar scripts que alteren el esquema.
+Los colaboradores no deben modificar el esquema ni ejecutar scripts que alteren la estructura de la base de datos sin autorización.
 
-La tabla tiene exactamente estas columnas:
+Todos los módulos utilizan la misma tabla `records`, con estas columnas:
 
 | Columna | Tipo | Uso |
 |---|---|---|
-| `id` | TEXT PRIMARY KEY | UUID del registro |
-| `created_at` | DATETIME DEFAULT CURRENT_TIMESTAMP | Fecha de creación |
-| `autor` | TEXT NOT NULL | Integrante propietario |
-| `modulo` | TEXT NOT NULL | Módulo propietario |
-| `content` | BLOB NOT NULL | Documento JSONB |
+| `id` | `TEXT PRIMARY KEY` | Identificador UUID |
+| `created_at` | `DATETIME DEFAULT CURRENT_TIMESTAMP` | Fecha de creación |
+| `autor` | `TEXT NOT NULL` | Integrante propietario |
+| `modulo` | `TEXT NOT NULL` | Módulo propietario |
+| `content` | `BLOB NOT NULL` | Documento JSONB |
 
-## 6. Cómo crear tu módulo
+La tabla cuenta con índices para `modulo` y `autor`.
 
-Crea únicamente tu carpeta dentro de `src/modules/`. Ejemplo para CANEK:
+## 7. Arquitectura del repositorio
+
+El proyecto está organizado de la siguiente manera:
 
 ```text
-src/modules/aves/
-  index.ts
-  service.ts
+capa/
+├── .github/
+│   └── pull_request_template.md
+├── backend/
+│   ├── tsconfig.json
+│   └── src/
+│       ├── config/
+│       │   └── database.ts
+│       ├── database/
+│       │   └── init.ts
+│       ├── repositories/
+│       │   └── ModuleRepository.ts
+│       ├── modules/
+│       │   ├── peliculas/
+│       │   │   ├── index.ts
+│       │   │   └── example.ts
+│       │   ├── aves/
+│       │   ├── comida/
+│       │   └── anime/
+│       ├── routes/
+│       │   └── peliculas.routes.ts
+│       └── server.ts
+├── frontend/
+│   ├── src/
+│   ├── index.html
+│   └── vite.config.ts
+├── .env.example
+├── .gitignore
+├── package.json
+├── package-lock.json
+└── README.md
 ```
 
-En `index.ts`, define el tipo de tu contenido y crea tu repositorio:
+## 8. Crear un módulo
+
+Cada integrante puede crear y modificar archivos exclusivamente dentro de su carpeta autorizada:
+
+```text
+backend/src/modules/<tu-modulo>/
+```
+
+Por ejemplo, CANEK trabaja en:
+
+```text
+backend/src/modules/aves/
+```
+
+Puede organizar su módulo con archivos como:
+
+- `index.ts`: interfaz de datos e instancia del repositorio.
+- `service.ts`: lógica propia del módulo.
+- `example.ts`: pruebas de las operaciones CRUD.
+
+### Ejemplo de index.ts para CANEK
 
 ```ts
 import { ModuleRepository } from '../../repositories/ModuleRepository.js';
@@ -101,111 +183,149 @@ export const avesRepository = new ModuleRepository<Ave>({
 });
 ```
 
-Para ALY usa `modulo: 'comida'` y `autor: 'ALY'`. Para AMBAR usa `modulo: 'anime'` y `autor: 'AMBAR'`. PAOLA ya tiene un ejemplo completo en `src/modules/peliculas/`.
+Para los demás integrantes:
 
-## 7. Operaciones CRUD
+| Integrante | `modulo` | `autor` |
+|---|---|---|
+| PAOLA | `peliculas` | `PAOLA` |
+| CANEK | `aves` | `CANEK` |
+| ALY | `comida` | `ALY` |
+| AMBAR | `anime` | `AMBAR` |
 
-Todos los métodos reciben/devuelven objetos TypeScript; no necesitas escribir SQL en tu módulo.
+## 9. Operaciones CRUD disponibles
+
+El repositorio genérico `ModuleRepository` proporciona los siguientes métodos:
 
 ```ts
-// Crear
-const nuevo = await avesRepository.create({
-  nombre: 'Colibrí',
-  nombreCientifico: 'Trochilidae',
-  habitat: ['bosque', 'jardín'],
-  caracteristicas: { alimentacion: 'néctar', migratoria: false }
-});
+// Crear un registro
+const nuevo = await avesRepository.create(datos);
 
-// Listar registros de aves
+// Consultar todos los registros del módulo
 const todos = await avesRepository.findAll();
 
-// Buscar por UUID
+// Consultar por UUID
 const uno = await avesRepository.findById(nuevo.id);
 
-// Buscar por propiedad de primer nivel dentro de content
-const colibries = await avesRepository.findByField('nombre', 'Colibrí');
+// Buscar por propiedad de primer nivel
+const encontrados = await avesRepository.findByField(
+  'nombre',
+  'Colibrí'
+);
 
 // Actualizar el documento completo
 const actualizado = await avesRepository.update(nuevo.id, {
   ...nuevo.content,
-  habitat: ['bosque', 'jardín', 'montaña']
+  nombre: 'Colibrí garganta rubí'
 });
 
-// Eliminar
+// Eliminar por UUID
 const eliminado = await avesRepository.delete(nuevo.id);
 ```
 
-`findByField` busca claves de primer nivel (por ejemplo `nombre`, `anio`, `disponible`). Los nombres de clave admiten letras, números y guion bajo, y deben comenzar con letra o guion bajo. Para campos anidados se puede ampliar el repositorio con una API de rutas JSON validada.
+No es necesario escribir consultas SQL dentro de cada módulo.
 
-## 8. Ejecutar y comprobar
+`findByField` busca propiedades de primer nivel dentro de `content`. Para campos anidados se necesita ampliar el repositorio con una API de rutas JSON validada.
 
-El ejemplo de PAOLA realiza CREATE, FIND ALL, FIND BY ID, FIND BY FIELD y UPDATE:
+## 10. Ejecutar y comprobar el proyecto
+
+### Backend
+
+Desde la raíz del proyecto:
 
 ```bash
-npm run dev:peliculas
+npm run dev:backend
 ```
 
-Comprobación de tipos:
+El servidor se ejecuta en:
+
+```text
+http://localhost:3000
+```
+
+### Frontend
+
+En otra terminal:
+
+```bash
+cd frontend
+npm run dev
+```
+
+Vite mostrará la dirección local del frontend, normalmente:
+
+```text
+http://localhost:5173
+```
+
+### Comprobación de tipos del backend
+
+Desde la raíz:
 
 ```bash
 npm run typecheck
 ```
 
-## 9. Reglas obligatorias de colaboración
+### Ejemplo CRUD de la líder
 
-1. Trabaja exclusivamente en tu rama: `git checkout <tu-modulo>`.
-2. Modifica únicamente `src/modules/<tu-modulo>/`.
-3. No cambies `src/repositories/`, `src/config/`, `src/database/`, `package.json` ni el esquema de Turso sin autorización del líder.
-4. No crees tablas adicionales: todos usan `records`.
-5. No guardes credenciales en el código ni en Git.
-6. Antes de subir, ejecuta `npm run typecheck`.
-7. Abre un Pull Request desde tu rama hacia `main` y completa la plantilla.
+Desde la raíz:
 
-## 10. Subir cambios y abrir PR
+```bash
+npm run dev:peliculas
+```
+
+Este ejemplo demuestra las operaciones de creación, consulta, búsqueda, actualización y eliminación.
+
+## 11. Reglas obligatorias de colaboración
+
+1. Trabaja únicamente en tu rama asignada.
+2. Modifica exclusivamente `backend/src/modules/<tu-modulo>/`.
+3. No modifiques `ModuleRepository.ts`, `database.ts`, `init.ts`, `server.ts`, las rutas compartidas ni los archivos de configuración sin autorización de la líder.
+4. No modifiques `package.json` ni agregues dependencias sin autorización.
+5. No crees tablas adicionales en Turso.
+6. No guardes credenciales ni tokens en el código.
+7. No incluyas `.env`, `node_modules` ni `dist` en tus commits.
+8. Ejecuta `npm run typecheck` antes de enviar tus cambios.
+9. Prueba las operaciones CRUD que utilice tu módulo.
+10. Envía un Pull Request hacia `main` y espera la revisión de la líder.
+
+## 12. Subir cambios y abrir un Pull Request
+
+Comprueba primero tus archivos modificados:
 
 ```bash
 git status
-git add src/modules/<tu-modulo>/
+```
+
+Agrega únicamente tu carpeta:
+
+```bash
+git add backend/src/modules/<tu-modulo>/
+```
+
+Crea el commit:
+
+```bash
 git commit -m "feat(<tu-modulo>): implementa módulo"
+```
+
+Sube los cambios:
+
+```bash
 git push -u origin <tu-modulo>
 ```
 
 En GitHub crea un Pull Request con:
 
-- **base:** `main`
-- **compare:** tu rama (`aves`, `comida`, `anime` o `peliculas`)
+- **Base:** `main`
+- **Compare:** tu rama asignada.
 
-Espera la revisión y aprobación de PAOLA antes de integrar.
+Espera la revisión y aprobación de PAOLA antes de integrar los cambios.
 
-## 11. Consideraciones técnicas
+## 13. Consideraciones técnicas
 
-- El repositorio filtra por `modulo` en todas las lecturas, actualizaciones y eliminaciones para evitar que un módulo modifique registros de otro.
-- `autor` y `modulo` se inyectan desde el constructor; no los envíes dentro de `content`.
-- `content` se convierte con `jsonb(?)` al insertar/actualizar y se devuelve con `json(content)` al consultar.
-- El JSONB de SQLite/libSQL es un formato binario propio de SQLite; no es compatible con el JSONB de PostgreSQL.
-- `db:init` comprueba que la función `jsonb()` esté disponible en el motor remoto. Si falla, no continúes con el CRUD hasta validar la compatibilidad de la instancia Turso/libSQL.
-- `findByField` permite filtrar por propiedades de primer nivel; no es un buscador genérico de rutas anidadas.
-
-## 12. Estructura general
-
-```text
-capa/
-├── .github/
-│   └── pull_request_template.md
-├── src/
-│   ├── config/
-│   │   └── database.ts
-│   ├── database/
-│   │   └── init.ts
-│   ├── repositories/
-│   │   └── ModuleRepository.ts
-│   └── modules/
-│       └── peliculas/
-│           ├── index.ts
-│           └── example.ts
-├── .env.example
-├── .gitignore
-├── package.json
-├── tsconfig.json
-└── README.md
-```
+- Todos los módulos utilizan una única tabla compartida `records`.
+- El repositorio filtra las operaciones por `modulo`.
+- `autor` y `modulo` se inyectan desde el constructor de `ModuleRepository`.
+- Los datos se almacenan mediante `jsonb(?)` y se consultan mediante `json(content)`.
+- El JSONB de SQLite/libSQL es un formato propio y no debe confundirse con el JSONB de PostgreSQL.
+- La líder es responsable de los cambios en la infraestructura compartida y de revisar los Pull Requests.

@@ -26,7 +26,7 @@ type DbRow = {
  * Repositorio genérico para la tabla única `records`.
  * Cada módulo crea una instancia con su nombre de rama y autor.
  */
-export class ModuleRepository<T extends Record<string, unknown> = Record<string, unknown>> {
+export class ModuleRepository<T extends object = Record<string, unknown>> {
   private readonly modulo: string;
   private readonly autor: string;
 
